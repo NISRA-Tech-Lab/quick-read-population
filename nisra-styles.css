@@ -1,0 +1,93 @@
+/* ===========================
+   Base
+   =========================== */
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;           /* better readability than 1.0 */
+  font-weight: 400;
+}
+
+/* Headings per style guide */
+h1 { font-size: 28px; line-height: 1.285; font-weight: 700; }
+@media (min-width: 992px) { h1 { font-size: 30px; line-height: 1.3; } }
+
+h2 { font-size: 24px; line-height: 1.333; font-weight: 400; }
+@media (min-width: 992px) { h2 { font-size: 25px; line-height: 1.32; } }
+
+h3 { font-size: 21px; line-height: 1.143; font-weight: 400; }
+@media (min-width: 992px) { h3 { font-size: 24px; line-height: 1.25; } }
+
+h4 { font-size: 18px; line-height: 1.333; font-weight: 400; }
+@media (min-width: 992px) { h4 { font-size: 21px; line-height: 1.286; } }
+
+/* Page background (main content area) */
+main { 
+  background-color: #f2f5f8;
+  min-height: 100vh;
+ }
+
+/* External link indicator (scope to main so footer links aren’t doubled) */
+main a[target="_blank"]::after {
+  content: "";
+  width: 14px; height: 11px;
+  margin: 5px; vertical-align: text-bottom; display: inline-block;
+
+  /* Use the SVG as a mask; then color it with Bootstrap’s variable */
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11"><g fill="none" stroke="%23000" stroke-width="1"><path d="M0 3h2V0h12v8h-2v3H0zm13-2H3v6h10zM2 4H1v4h1zm-1 6h10V8H1z"/></g></svg>') no-repeat center / contain;
+          mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11"><g fill="none" stroke="%23000" stroke-width="1"><path d="M0 3h2V0h12v8h-2v3H0zm13-2H3v6h10zM2 4H1v4h1zm-1 6h10V8H1z"/></g></svg>') no-repeat center / contain;
+  background-color: var(--bs-secondary-color, #6c757d); /* follows Bootstrap’s text-secondary */
+}
+
+
+/* ===========================
+   Brand & misc.
+   =========================== */
+.app-title { font-weight: 700; letter-spacing: 0.2px; }
+.img-50 { width: 50px; height: 50px; }
+
+/* ===========================
+   Footer
+   =========================== */
+.footer {
+  background-color: #00205b;
+  color: #fff;
+  border-top: 4px solid #3878c5;
+}
+.footer a {
+  color: #fff;
+  text-underline-offset: 3px;
+}
+.footer a:hover,
+.footer a:focus {
+  color: #fff;
+  text-decoration-thickness: 2px;
+}
+.footer-links { list-style: none; padding-left: 0; }
+.footer-links .list-inline-item { margin: 0 .5rem; }
+
+/* More vertical spacing in vertical lists */
+.footer ul.list-unstyled li { margin-bottom: 0.5rem; }
+
+/* Social icon hover */
+.footer .list-inline-item img {
+  transition: box-shadow 0.2s ease, border 0.2s ease;
+}
+.footer .list-inline-item img:hover {
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+}
+
+nav a {
+  color: #fff;
+}
+
+nav a[target="_blank"]::after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11"><g fill="none" stroke="white" stroke-width="1"><path d="M0 3h2V0h12v8h-2v3H0zm13-2H3v6h10zM2 4H1v4h1zm-1 6h10V8H1z"/></g></svg>');
+  display: inline-block;
+  width: 14px;
+  height: 11px;
+  margin: 0 5px 0 5px;
+  vertical-align: text-top;
+}
