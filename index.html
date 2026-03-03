@@ -32,14 +32,16 @@
   fetch('public/data/data.json')
     .then(response => response.json())
     .then(data => {
-      document.querySelectorAll('.latest_year').forEach(el => {
-        el.textContent = data.latest_year;
-      });
-      document.querySelectorAll('.latest_pop_round_million').forEach(el => {
-        el.textContent = data.latest_pop_round_million;
-      });
-      document.querySelectorAll('.latest_pop_total').forEach(el => {
-        el.textContent = data.latest_pop_total.toLocaleString();
+      Object.keys(data).forEach(key => {
+        document.querySelectorAll('.' + key).forEach(el => {
+          let value = data[key];
+          value = Array.isArray(value) ? value[0] : value;
+          if (el.classList.contains('format-number') && typeof value === 'number') {
+            el.textContent = value.toLocaleString();
+          } else {
+            el.textContent = value;
+          }
+        });
       });
     })
     .catch(error => console.error('Error loading data:', error));
@@ -84,7 +86,7 @@
 
     
     <h2>How many people live in Northern Ireland?</h2>
-    <p>In <span class="latest_year"></span> around <span class="latest_pop_round_million"></span> million people lived here (<span class="latest_pop_total"></span>).</p>
+    <p>In <span class="latest_year"></span> around <span class="latest_pop_round_million"></span> million people lived here (<span class="latest_pop_total format-number"></span>).</p>
     <img src="img/pop_age.png" alt="population by age group showing a population curve rising from children, to adults aged 16 to 39, peaking for 40 to 64 year olds and falling again for 65 and older">
 
     <h3>What does our population look like?</h3>
