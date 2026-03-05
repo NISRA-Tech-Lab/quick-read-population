@@ -37,17 +37,32 @@ h4 { font-size: 18px; line-height: 1.333; font-weight: 400; }
 /* Page background (main content area) */
 main { 
   background: transparent !important;
- }
+}
 
- /* .app-content {
-  background: #fff;
-  border: 1px solid #6c757d;
-  border-radius: 0.375rem;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
- } */
+main .container {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
+/* Border around main content */
+main .bg-white {
+  border: 1px solid #d0d0d0;
+}
+
+/* Align navbar with main content width */
+.navbar .container-fluid {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Align footer with main content width */
+.footer .container {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
 /* External link indicator (scope to main so footer links aren’t doubled) */
 main a[target="_blank"]::after {
   content: "";
