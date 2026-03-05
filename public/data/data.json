@@ -1,6 +1,17 @@
 {
   "latest_year": [2024],
-  "earliest_year": [2021],
+  "earliest_year": [2001],
   "latest_pop_round_million": [1.9],
-  "latest_pop_total": [1927855]
+  "latest_pop_total": [1927855],
+  "pct_under_16": [20],
+  "pct_16_64": [62],
+  "pct_65_plus": [18],
+  "pct_female": [51],
+  "earliest_pop_total": [1688838],
+  "earliest_pop_round_million": [1.7],
+  "pop_change_round": [239000],
+  "median_1994": [32],
+  "median_latest": [40],
+  "pop_peak_mill": [1.95],
+  "pop_peak_year": [2033]
 }

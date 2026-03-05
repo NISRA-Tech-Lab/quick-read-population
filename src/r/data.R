@@ -5,7 +5,8 @@ library(jsonlite)
 # List datasets ####
 tables <- c(
   "MA01T01",
-  "MYE01T015"
+  "MYE01T04",
+  "PPMY02T02"
 )
 
 # API Key ####
@@ -120,17 +121,54 @@ for (matrix in tables) {
   )
 }
 
-# filter MYE01T015 for Northern Ireland only
-df_ni_mye01t015_all <- MYE01T015_df %>% filter(AA2024 == "N92000002") %>% filter(Sex == "All")
+# filter MYE01T04 for Northern Ireland only
+df_mye01t04_ni <- MYE01T04_df %>% subset(LGD2014 == "N92000002")
+
+# filter for all sexes
+df_ni_mye01t04_all <- df_mye01t04_ni %>% filter(Sex == "All")
 
 # latest and earliest years
-latest_year <- max(as.numeric(df_ni_mye01t015_all$Year))
-earliest_year <- min(as.numeric(df_ni_mye01t015_all$Year))
+latest_year <- max(as.numeric(df_ni_mye01t04_all$Year))
+earliest_year <- min(as.numeric(df_ni_mye01t04_all$Year))
 
-# population figures
-latest_pop_total <- df_ni_mye01t015_all %>% filter(Year == latest_year & broadage4 == "All") %>% pull(VALUE)
+# latest population figures
+latest_pop_total <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == "All") %>% pull(VALUE)
 latest_pop_round_million <- round(latest_pop_total/1000000, digits = 1)
- 
+
+pct_under_16 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 1) %>% pull(VALUE) / latest_pop_total*100
+pct_under16_round <- round(pct_under_16, digits = 0)
+tot_16_39 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 2) %>% pull(VALUE)
+tot_40_64 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 3) %>% pull(VALUE)
+pct_16_64 <- (tot_16_39 + tot_40_64) / latest_pop_total * 100
+pct_16_64_round <- round(pct_16_64, digits = 0)
+pct_65_plus <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 4) %>% pull(VALUE) / latest_pop_total * 100
+pct_65_plus_round <- round(pct_65_plus, digits = 0)
+
+pct_female <-df_mye01t04_ni %>% subset(Year == latest_year) %>% filter(broadage4 == "All" & Sex == 1) %>% pull(VALUE) / latest_pop_total *100
+pct_female_round <- round(pct_female, digits = 0)
+
+# earliest year population figures
+earliest_pop_total <- df_ni_mye01t04_all %>% filter(Year == earliest_year & broadage4 == "All") %>% pull(VALUE)
+earliest_pop_round_million <- round(earliest_pop_total/1000000, digits = 1)
+
+# pop change
+pop_change <- latest_pop_total - earliest_pop_total
+pop_change_round <- round(pop_change, digits = -3)
+
+# median age
+median_1994 <- MA01T01_df %>% filter(Year == 1994 & Sex == "All")%>% pull(VALUE)
+median_latest <- MA01T01_df %>% filter(Year == latest_year & Sex == "All") %>% pull(VALUE)
+median_latest_round <- round(median_latest, digits = 0)
+
+# projections
+df_projections <- PPMY02T02_df %>% subset(Sex == "All") 
+df_projections_yr_tots <- df_projections %>% group_by(Year) %>% summarise(total = sum(VALUE))
+pop_peak <- max(as.numeric(df_projections_yr_tots$total))
+pop_peak_mill <- round(pop_peak/1000000, digits = 2)
+pop_peak_year <- df_projections_yr_tots %>% filter(total == pop_peak) %>% pull(Year)
+
+
+
 if (!dir.exists("public")) dir.create("public")
 if (!dir.exists("public/data")) dir.create("public/data")
 
@@ -139,7 +177,18 @@ output_data <- list(
   latest_year = latest_year,
   earliest_year = earliest_year,
   latest_pop_round_million = latest_pop_round_million,
-  latest_pop_total = latest_pop_total
+  latest_pop_total = latest_pop_total,
+  pct_under_16 = pct_under16_round,
+  pct_16_64 = pct_16_64_round,
+  pct_65_plus = pct_65_plus_round,
+  pct_female = pct_female_round,
+  earliest_pop_total = earliest_pop_total,
+  earliest_pop_round_million = earliest_pop_round_million,
+  pop_change_round = pop_change_round,
+  median_1994 = median_1994,
+  median_latest = median_latest_round,
+  pop_peak_mill = pop_peak_mill,
+  pop_peak_year = pop_peak_year
 )
 
 # Write as JSON
