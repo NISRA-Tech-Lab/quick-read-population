@@ -27,6 +27,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="nisra-styles.css">
 
+    <!-- Chart js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+
     <script>
   // Fetch and populate data
   fetch('public/data/data.json')
@@ -87,10 +90,66 @@
     
     <h2>How many people live in Northern Ireland?</h2>
     <p>In <span class="latest_year"></span> around <span class="latest_pop_round_million"></span> million people lived here (<span class="latest_pop_total format-number"></span>).</p>
-    <img src="img/pop_age.png" alt="population by age group showing a population curve rising from children, to adults aged 16 to 39, peaking for 40 to 64 year olds and falling again for 65 and older">
+    <!-- <img src="img/pop_age.png" alt="population by age group showing a population curve rising from children, to adults aged 16 to 39, peaking for 40 to 64 year olds and falling again for 65 and older"> -->
+    
+    <h2>What does our population look like?</h2>
+    <!-- <h4>Population by age group <span class="latest_year"></span></h4> -->
+    <canvas id="popAgeChart"></canvas>
 
-    <h3>What does our population look like?</h3>
-    <p>In <span class="latest_year"></span>, approximately:
+    <script>
+      const popagedata = {
+        labels: ['Under 16', '16 to 39', '40 to 64', '65 and over'],
+        datasets: [{
+          // label: ,
+          data: [384682, 571179, 622800, 349194], 
+          backgroundColor: ['#00205b', '#00205b', '#00205b', '#00205b'],
+          barPercentage: 0.9,
+          categoryPercentage: 0.95
+        }]
+      };
+      
+      const config = {
+        type: 'bar',
+        data: popagedata,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: true
+              },
+              ticks: {
+                maxTicksLimit: 5
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+            }
+        },
+          plugins: {
+            legend: {
+              display: false
+            },
+            title: {
+              display: true,
+              text: 'Population by age group 2024' + document.querySelector('.latest_year').textContent,
+              font: {'family': 'Roboto', size: 18, weight: 'normal'},
+              padding: {
+                top: 10,
+                bottom: 30
+            }
+          }
+      }  
+    } 
+      };
+      
+      const ctx = document.getElementById('popAgeChart').getContext('2d');
+      new Chart(ctx, config);
+    </script>
+
+    <p style="margin-top: 2em;">In <span class="latest_year"></span>, approximately:
     <ul>
       <li><span class="pct_under_16"></span>% were children under the age of 16</li>
       <li><span class="pct_16_64"></span>% were adults aged 16 to 64</li>
@@ -107,7 +166,7 @@
     </ul>
 
 
-    <h3>What causes population change?</h3>
+    <h2>What causes population change?</h2>
     <p>Population change is driven by three main factors: 
       <ul>
         <li>births,</li>
@@ -116,7 +175,7 @@
       </ul></p>
       <p>Our population growth is due to more babies being born than people dying, and more people coming to live here than are leaving.</p>
 
-      <h3>What does the future look like?</h3>
+      <h2>What does the future look like?</h2>
       <p>Our population is ageing. To measure this, we look at the average age (in this case we use the median). If we lined up all our citizens from youngest to oldest, the one in the middle would be the median.</p>
       <ul>
         <li>In 1994 the median age was <span class="median_1994"></span>.</li>
@@ -125,12 +184,12 @@
       <p>Our population growth is also predicted to slow down, peak in <span class="pop_peak_year"></span> at <span class="pop_peak_mill"></span> million and then fall slightly to 1.93 million by 2047.
          That is based on trends in how long we live, how many babies are born, and the numbers of people coming to live here and leaving to live elsewhere.</p>
 
-      <h3>Where do these statistics come from?</h3>
+      <h2>Where do these statistics come from?</h2>
       <p>The main population counts come from the Census, which takes place every 10 years. The most recent was 2021.</p>
       <p>Each year, NISRA then estimates how many people live in Northern Ireland on 30 June. This is called a 'mid-year estimate'.</p>
       <p>We start with last year's number, add babies born, subtract deaths, and count people who moved in or out.</p>
 
-      <h3>Why are these statistics important?</h3>
+      <h2>Why are these statistics important?</h2>
       <p>Government departments use population statistics to plan public services such as education, health and transport. They help us plan how many schools, hospitals and care homes etc. we need.</p>
       <p>They are also useful to academics and researchers, and they help us calculate how often events (such as crimes or illnesses) occur per a certain number of people so we can make comparisons.</p>
     
