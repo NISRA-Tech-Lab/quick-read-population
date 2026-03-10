@@ -134,6 +134,7 @@ earliest_year <- min(as.numeric(df_ni_mye01t04_all$Year))
 # latest population figures
 latest_pop_total <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == "All") %>% pull(VALUE)
 latest_pop_round_million <- round(latest_pop_total/1000000, digits = 1)
+latest_age_band_totals <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 != "All")
 
 pct_under_16 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 1) %>% pull(VALUE) / latest_pop_total*100
 pct_under16_round <- round(pct_under_16, digits = 0)
