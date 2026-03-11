@@ -175,27 +175,41 @@ if (!dir.exists("public/data")) dir.create("public/data")
 
 # Create a list of variables to export
 output_data <- list(
-  latest_year = latest_year,
-  earliest_year = earliest_year,
-  latest_pop_round_million = latest_pop_round_million,
-  latest_pop_total = latest_pop_total,
-  pct_under_16 = pct_under16_round,
-  pct_16_64 = pct_16_64_round,
-  pct_65_plus = pct_65_plus_round,
-  pct_female = pct_female_round,
-  earliest_pop_total = earliest_pop_total,
-  earliest_pop_round_million = earliest_pop_round_million,
-  pop_change_round = pop_change_round,
-  median_1994 = median_1994,
-  median_latest = median_latest_round,
-  pop_peak_mill = pop_peak_mill,
-  pop_peak_year = pop_peak_year,
-  pop_chart_labels = latest_age_band_totals$age_band_labels,
-  pop_chart_values = latest_age_band_totals$value
+  summary = list(
+    latest_year = latest_year,
+    earliest_year = earliest_year,
+    latest_pop_round_million = latest_pop_round_million,
+    latest_pop_total = latest_pop_total,
+    pct_under_16 = pct_under16_round,
+    pct_16_64 = pct_16_64_round,
+    pct_65_plus = pct_65_plus_round,
+    pct_female = pct_female_round,
+    earliest_pop_total = earliest_pop_total,
+    earliest_pop_round_million = earliest_pop_round_million,
+    pop_change_round = pop_change_round,
+    median_1994 = median_1994,
+    median_latest = median_latest_round,
+    pop_peak_mill = pop_peak_mill,
+    pop_peak_year = pop_peak_year),
+  charts = list(
+    popAgeChart = list(
+      type = 'bar',
+      title = paste0("Population by age group ", latest_year),
+      labels = latest_age_band_totals$age_band_labels,
+      datasets = list(
+        list(
+          label = "Population",
+          data = latest_age_band_totals$value,
+          backgroundColor = c("#00205b", "#00205b", "#00205b", "#00205b")
+        )
+      )
+    )
+  )
 )
+ 
 
 # If any of the values are single-length vectors, simplify them to the single value for easier use in the HTML.
-output_data <- lapply(output_data, function(x) {
+output_data$summary <- lapply(output_data$summary, function(x) {
   if (length(x) == 1) x[[1]] else x
 })
 
