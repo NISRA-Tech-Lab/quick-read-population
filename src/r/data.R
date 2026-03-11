@@ -134,7 +134,7 @@ earliest_year <- min(as.numeric(df_ni_mye01t04_all$Year))
 # latest population figures
 latest_pop_total <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == "All") %>% pull(VALUE)
 latest_pop_round_million <- round(latest_pop_total/1000000, digits = 1)
-latest_age_band_totals <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 != "All")
+latest_age_band_totals <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 != "All") %>% select(Broad.age.band..4.cat., VALUE) %>% rename("age_band_labels" = Broad.age.band..4.cat., "value" = VALUE)
 
 pct_under_16 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 1) %>% pull(VALUE) / latest_pop_total*100
 pct_under16_round <- round(pct_under_16, digits = 0)
@@ -189,10 +189,17 @@ output_data <- list(
   median_1994 = median_1994,
   median_latest = median_latest_round,
   pop_peak_mill = pop_peak_mill,
-  pop_peak_year = pop_peak_year
+  pop_peak_year = pop_peak_year,
+  pop_chart_labels = latest_age_band_totals$age_band_labels,
+  pop_chart_values = latest_age_band_totals$value
 )
 
+# If any of the values are single-length vectors, simplify them to the single value for easier use in the HTML.
+output_data <- lapply(output_data, function(x) {
+  if (length(x) == 1) x[[1]] else x
+})
+
 # Write as JSON
-jsonlite::write_json(output_data, "public/data/data.json", pretty = TRUE)
+jsonlite::write_json(output_data, "public/data/data.json", pretty = TRUE, auto_unbox = TRUE )
 
 message("✓ Data fetched and cached successfully!")

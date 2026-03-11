@@ -35,19 +35,77 @@
   fetch('public/data/data.json')
     .then(response => response.json())
     .then(data => {
+      console.log('Loaded data:', data); // Log the loaded data for debugging
+
+      // Fill text fields
       Object.keys(data).forEach(key => {
+        // Skip arrays for charts
+        if (key === 'pop_chart_labels' || key === 'pop_chart_values') return; 
         document.querySelectorAll('.' + key).forEach(el => {
           let value = data[key];
-          value = Array.isArray(value) ? value[0] : value;
+          // if the value is an array, take the first element (for cases where we might have multiple values for different years, but we just want to show the latest)
+          if (Array.isArray(value) && value.length ===1) {
+            value = value[0];
+          } 
+          // Format numbers with commas if the element has the 'format-number' class and the value is a number
           if (el.classList.contains('format-number') && typeof value === 'number') {
             el.textContent = value.toLocaleString();
           } else {
             el.textContent = value;
           }
         });
+        });
+
+        // Build chart
+        const ctx = document.getElementById('popAgeChart').getContext('2d');
+
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: data.pop_chart_labels,
+            datasets: [{
+              data: data.pop_chart_values,
+              backgroundColor: ['#00205b', '#00205b', '#00205b', '#00205b'],
+              barPercentage: 0.9,
+              categoryPercentage: 0.95
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  display: true
+                },
+                ticks: {
+                  maxTicksLimit: 5
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                },
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Population by age group ' + data.latest_year,
+                font: {'family': 'Roboto', size: 18, weight: 'normal'},
+                padding: {
+                  top: 10,
+                  bottom: 30
+                }
+              }
+            }
+          }
       });
     })
     .catch(error => console.error('Error loading data:', error));
+    
 </script>
 
   </head>
@@ -92,62 +150,9 @@
     <p>In <span class="latest_year"></span> around <span class="latest_pop_round_million"></span> million people lived here (<span class="latest_pop_total format-number"></span>).</p>
     <!-- <img src="img/pop_age.png" alt="population by age group showing a population curve rising from children, to adults aged 16 to 39, peaking for 40 to 64 year olds and falling again for 65 and older"> -->
     
-    <h2>What does our population look like?</h2>
-    <!-- <h4>Population by age group <span class="latest_year"></span></h4> -->
+    <h2>What does our population look like?</h2>   
     <canvas id="popAgeChart"></canvas>
 
-    <script>
-      const popagedata = {
-        labels: ['Under 16', '16 to 39', '40 to 64', '65 and over'],
-        datasets: [{
-          // label: ,
-          data: [384682, 571179, 622800, 349194], 
-          backgroundColor: ['#00205b', '#00205b', '#00205b', '#00205b'],
-          barPercentage: 0.9,
-          categoryPercentage: 0.95
-        }]
-      };
-      
-      const config = {
-        type: 'bar',
-        data: popagedata,
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                display: true
-              },
-              ticks: {
-                maxTicksLimit: 5
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-            }
-        },
-          plugins: {
-            legend: {
-              display: false
-            },
-            title: {
-              display: true,
-              text: 'Population by age group 2024' + document.querySelector('.latest_year').textContent,
-              font: {'family': 'Roboto', size: 18, weight: 'normal'},
-              padding: {
-                top: 10,
-                bottom: 30
-            }
-          }
-      }  
-    } 
-      };
-      
-      const ctx = document.getElementById('popAgeChart').getContext('2d');
-      new Chart(ctx, config);
-    </script>
 
     <p style="margin-top: 2em;">In <span class="latest_year"></span>, approximately:
     <ul>
