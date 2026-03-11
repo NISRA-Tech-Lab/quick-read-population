@@ -5,18 +5,19 @@ library(jsonlite)
 # List datasets ####
 tables <- c(
   "MA01T01",
-  "MYE01T015"
+  "MYE01T04",
+  "PPMY02T02"
 )
 
 # API Key ####
 api_key <- "801aaca4bcf0030599c019f4efa8b89032e5e6aa1de4a629a7f7e9a86db7fb8c"
 
-# Fetch dataset function ####
+# Fetch metadata function ####
 
-fetch_dataset <- function(matrix,
-                          api_key,
-                          max_attempts = Inf,
-                          wait_seconds = 2) {
+fetch_metadata <- function(matrix,
+                           api_key,
+                           max_attempts = Inf,
+                           wait_seconds = 2) {
   attempt <- 1
   repeat {
     result <- tryCatch(
@@ -39,7 +40,47 @@ fetch_dataset <- function(matrix,
         return(json_data)  # ✅ success, return immediately
       },
       error = function(e) {
-        message(sprintf("Error fetching %s (attempt %d): %s",
+        message(sprintf("Error fetching metadata for %s (attempt %d): %s",
+                        matrix,
+                        attempt, e$message))
+        return(NULL)
+      }
+    )
+
+    if (!is.null(result)) {
+      return(result)  # break loop if successful
+    }
+
+    attempt <- attempt + 1
+    if (attempt > max_attempts) {
+      stop("Max attempts reached without success.")
+    }
+
+    Sys.sleep(wait_seconds)  # backoff before retry
+  }
+}
+
+# Read CSV data function ####
+
+read_csv_data <- function(matrix,
+                          max_attempts = Inf,
+                          wait_seconds = 2) {
+  attempt <- 1
+  repeat {
+    result <- tryCatch(
+      {
+        url <- paste0(
+          "https://ws-data.nisra.gov.uk/public/api.restful/",
+          "PxStat.Data.Cube_API.ReadDataset/",
+          matrix,
+          "/CSV/1.0/"
+        )
+
+        df <- read.csv(url)
+        return(df)  # ✅ success, return immediately
+      },
+      error = function(e) {
+        message(sprintf("Error reading CSV for %s (attempt %d): %s",
                         matrix,
                         attempt, e$message))
         return(NULL)
@@ -64,80 +105,101 @@ metadata <- list()
 
 for (matrix in tables) {
 
-  raw_data <- fetch_dataset(matrix, api_key)
+  # Fetch metadata from API
+  metadata_json <- fetch_metadata(matrix, api_key)
 
-  dimensions <- names(raw_data$dimension)
-  size <- raw_data$size
-
-  df <- data.frame(value = as.numeric(raw_data$value))
-
-  for (i in seq_along(dimensions)) {
-    dimension_cats <- unlist(raw_data$dimension[[dimensions[[i]]]]$category$label)
-    dimension_col <- c()
-
-    for (cat in dimension_cats) {
-      if (i == length(dimensions)) {
-        dimension_col <- c(dimension_col, cat)
-      } else {
-        dimension_col <- c(dimension_col, rep(cat, prod(size[(i + 1):length(size)])))
-      }
-    }
-
-    df[[dimensions[i]]] <- dimension_col
-  }
-
-  df <- df %>%
-    relocate(value, .after = dimensions[[length(dimensions)]])
+  # Read CSV data
+  df <- read_csv_data(matrix)
 
   # Assign dataframe to global environment with table name
   assign(paste0(matrix, "_df"), df)
 
   # Store metadata
   metadata[[matrix]] <- list(
-    label = raw_data$label,
-    updated = as.Date(raw_data$updated)
+    label = metadata_json$label,
+    updated = as.Date(metadata_json$updated)
   )
 }
 
-# Rename TLIST(A1) to year in all dataframes ####
-for (matrix in tables) {
-  df_name <- paste0(matrix, "_df")
-  df <- get(df_name)
-  if ("TLIST(A1)" %in% names(df)) {
-    df <- df %>% rename(year = `TLIST(A1)`)
-    assign(df_name, df)
-  }
-}
+# filter MYE01T04 for Northern Ireland only
+df_mye01t04_ni <- MYE01T04_df %>% subset(LGD2014 == "N92000002")
 
-# filter NYE01T015 for Northern Ireland only
-df_ni_mye01t015_all <- MYE01T015_df %>% filter(AA2024 == "Northern Ireland") %>% filter(Sex == "All persons")
+# filter for all sexes
+df_ni_mye01t04_all <- df_mye01t04_ni %>% filter(Sex == "All")
 
 # latest and earliest years
-latest_year <- max(as.numeric(df_ni_mye01t015$year))
-earliest_year <- min(as.numeric(df_ni_mye01t015$year))
+latest_year <- max(as.numeric(df_ni_mye01t04_all$Year))
+earliest_year <- min(as.numeric(df_ni_mye01t04_all$Year))
 
-# population figures
-latest_pop_total <- df_ni_mye01t015_all %>% filter(year == latest_year & broadage4 == "All") %>% pull(value)
+# latest population figures
+latest_pop_total <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == "All") %>% pull(VALUE)
 latest_pop_round_million <- round(latest_pop_total/1000000, digits = 1)
- 
+latest_age_band_totals <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 != "All") %>% select(Broad.age.band..4.cat., VALUE) %>% rename("age_band_labels" = Broad.age.band..4.cat., "value" = VALUE)
+
+pct_under_16 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 1) %>% pull(VALUE) / latest_pop_total*100
+pct_under16_round <- round(pct_under_16, digits = 0)
+tot_16_39 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 2) %>% pull(VALUE)
+tot_40_64 <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 3) %>% pull(VALUE)
+pct_16_64 <- (tot_16_39 + tot_40_64) / latest_pop_total * 100
+pct_16_64_round <- round(pct_16_64, digits = 0)
+pct_65_plus <- df_ni_mye01t04_all %>% filter(Year == latest_year & broadage4 == 4) %>% pull(VALUE) / latest_pop_total * 100
+pct_65_plus_round <- round(pct_65_plus, digits = 0)
+
+pct_female <-df_mye01t04_ni %>% subset(Year == latest_year) %>% filter(broadage4 == "All" & Sex == 1) %>% pull(VALUE) / latest_pop_total *100
+pct_female_round <- round(pct_female, digits = 0)
+
+# earliest year population figures
+earliest_pop_total <- df_ni_mye01t04_all %>% filter(Year == earliest_year & broadage4 == "All") %>% pull(VALUE)
+earliest_pop_round_million <- round(earliest_pop_total/1000000, digits = 1)
+
+# pop change
+pop_change <- latest_pop_total - earliest_pop_total
+pop_change_round <- round(pop_change, digits = -3)
+
+# median age
+median_1994 <- MA01T01_df %>% filter(Year == 1994 & Sex == "All")%>% pull(VALUE)
+median_latest <- MA01T01_df %>% filter(Year == latest_year & Sex == "All") %>% pull(VALUE)
+median_latest_round <- round(median_latest, digits = 0)
+
+# projections
+df_projections <- PPMY02T02_df %>% subset(Sex == "All") 
+df_projections_yr_tots <- df_projections %>% group_by(Year) %>% summarise(total = sum(VALUE))
+pop_peak <- max(as.numeric(df_projections_yr_tots$total))
+pop_peak_mill <- round(pop_peak/1000000, digits = 2)
+pop_peak_year <- df_projections_yr_tots %>% filter(total == pop_peak) %>% pull(Year)
+
+
+
 if (!dir.exists("public")) dir.create("public")
 if (!dir.exists("public/data")) dir.create("public/data")
-
-# Export dataframes to CSV for reference
-for (matrix in tables) {
-  df_name <- paste0(matrix, "_df")
-  df <- get(df_name)
-  write.csv(df, file.path("public/data", paste0(matrix, ".csv")), row.names = FALSE)
-}
 
 # Create a list of variables to export
 output_data <- list(
   latest_year = latest_year,
+  earliest_year = earliest_year,
   latest_pop_round_million = latest_pop_round_million,
-  latest_pop_total = latest_pop_total
+  latest_pop_total = latest_pop_total,
+  pct_under_16 = pct_under16_round,
+  pct_16_64 = pct_16_64_round,
+  pct_65_plus = pct_65_plus_round,
+  pct_female = pct_female_round,
+  earliest_pop_total = earliest_pop_total,
+  earliest_pop_round_million = earliest_pop_round_million,
+  pop_change_round = pop_change_round,
+  median_1994 = median_1994,
+  median_latest = median_latest_round,
+  pop_peak_mill = pop_peak_mill,
+  pop_peak_year = pop_peak_year,
+  pop_chart_labels = latest_age_band_totals$age_band_labels,
+  pop_chart_values = latest_age_band_totals$value
 )
 
+# If any of the values are single-length vectors, simplify them to the single value for easier use in the HTML.
+output_data <- lapply(output_data, function(x) {
+  if (length(x) == 1) x[[1]] else x
+})
+
 # Write as JSON
-jsonlite::write_json(output_data, "public/data/data.json", pretty = TRUE)
+jsonlite::write_json(output_data, "public/data/data.json", pretty = TRUE, auto_unbox = TRUE )
 
 message("✓ Data fetched and cached successfully!")
