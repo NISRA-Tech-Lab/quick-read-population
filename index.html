@@ -29,85 +29,6 @@
 
     <!-- Chart js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
-
-    <script>
-  // Fetch and populate data
-  fetch('public/data/data.json')
-    .then(response => response.json())
-    .then(data => {
-      console.log('Loaded data:', data); // Log the loaded data for debugging
-
-      // Fill text fields
-      Object.keys(data).forEach(key => {
-        // Skip arrays for charts
-        if (key === 'pop_chart_labels' || key === 'pop_chart_values') return; 
-        document.querySelectorAll('.' + key).forEach(el => {
-          let value = data[key];
-          // if the value is an array, take the first element (for cases where we might have multiple values for different years, but we just want to show the latest)
-          if (Array.isArray(value) && value.length ===1) {
-            value = value[0];
-          } 
-          // Format numbers with commas if the element has the 'format-number' class and the value is a number
-          if (el.classList.contains('format-number') && typeof value === 'number') {
-            el.textContent = value.toLocaleString();
-          } else {
-            el.textContent = value;
-          }
-        });
-        });
-
-        // Build chart
-        const ctx = document.getElementById('popAgeChart').getContext('2d');
-
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: data.pop_chart_labels,
-            datasets: [{
-              data: data.pop_chart_values,
-              backgroundColor: ['#00205b', '#00205b', '#00205b', '#00205b'],
-              barPercentage: 0.9,
-              categoryPercentage: 0.95
-            }]
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  display: true
-                },
-                ticks: {
-                  maxTicksLimit: 5
-                }
-              },
-              x: {
-                grid: {
-                  display: false
-                },
-              }
-            },
-            plugins: {
-              legend: {
-                display: false
-              },
-              title: {
-                display: true,
-                text: 'Population by age group ' + data.latest_year,
-                font: {'family': 'Roboto', size: 18, weight: 'normal'},
-                padding: {
-                  top: 10,
-                  bottom: 30
-                }
-              }
-            }
-          }
-      });
-    })
-    .catch(error => console.error('Error loading data:', error));
-    
-</script>
-
   </head>
 
   <body>
@@ -147,27 +68,26 @@
 
     
     <h2>How many people live in Northern Ireland?</h2>
-    <p>In <span class="latest_year"></span> around <span class="latest_pop_round_million"></span> million people lived here (<span class="latest_pop_total format-number"></span>).</p>
-    <!-- <img src="img/pop_age.png" alt="population by age group showing a population curve rising from children, to adults aged 16 to 39, peaking for 40 to 64 year olds and falling again for 65 and older"> -->
+    <p>In <span class="summary_latest_year"></span> around <span class="summary_latest_pop_round_million"></span> million people lived here (<span class="summary_latest_pop_total format-number"></span>).</p>
     
     <h2>What does our population look like?</h2>   
     <canvas id="popAgeChart"></canvas>
 
 
-    <p style="margin-top: 2em;">In <span class="latest_year"></span>, approximately:
+    <p style="margin-top: 2em;">In <span class="summary_latest_year"></span>, approximately:
     <ul>
-      <li><span class="pct_under_16"></span>% were children under the age of 16</li>
-      <li><span class="pct_16_64"></span>% were adults aged 16 to 64</li>
-      <li><span class="pct_65_plus"></span>% were 65 and over</li>
+      <li><span class="summary_pct_under_16"></span>% were children under the age of 16</li>
+      <li><span class="summary_pct_16_64"></span>% were adults aged 16 to 64</li>
+      <li><span class="summary_pct_65_plus"></span>% were 65 and over</li>
     </ul>
     </p>
-    <p>Just over half (<span class="pct_female"></span>%) of the population was female.</p>
+    <p>Just over half (<span class="summary_pct_female"></span>%) of the population was female.</p>
 
     <h2>How has our population changed?</h2>
     <p>Our population has been steadily growing.</p>
     <ul>
-    <li>In <span class="earliest_year"></span> it was about <span class="earliest_pop_round_million"></span> million (<span class="earliest_pop_total format-number"></span>).</li>
-    <li>That's an increase of just over <span class="pop_change_round format-number"></span> people (equivalent to around two thirds of all the people who live in Belfast, or one and a half times as many people who live in Derry~Londonderry.)</li>
+    <li>In <span class="summary_earliest_year"></span> it was about <span class="summary_earliest_pop_round_million"></span> million (<span class="summary_earliest_pop_total format-number"></span>).</li>
+    <li>That's an increase of just over <span class="summary_pop_change_round format-number"></span> people (equivalent to around two thirds of all the people who live in Belfast, or one and a half times as many people who live in Derry~Londonderry.)</li>
     </ul>
 
 
@@ -183,10 +103,10 @@
       <h2>What does the future look like?</h2>
       <p>Our population is ageing. To measure this, we look at the average age (in this case we use the median). If we lined up all our citizens from youngest to oldest, the one in the middle would be the median.</p>
       <ul>
-        <li>In 1994 the median age was <span class="median_1994"></span>.</li>
-        <li>In <span class="latest_year"></span> it was <span class="median_latest"></span>.</li>
+        <li>In 1994 the median age was <span class="summary_median_1994"></span>.</li>
+        <li>In <span class="summary_latest_year"></span> it was <span class="summary_median_latest"></span>.</li>
       </ul>
-      <p>Our population growth is also predicted to slow down, peak in <span class="pop_peak_year"></span> at <span class="pop_peak_mill"></span> million and then fall slightly to 1.93 million by 2047.
+      <p>Our population growth is also predicted to slow down, peak in <span class="summary_pop_peak_year"></span> at <span class="summary_pop_peak_mill"></span> million and then fall slightly to 1.93 million by 2047.
          That is based on trends in how long we live, how many babies are born, and the numbers of people coming to live here and leaving to live elsewhere.</p>
 
       <h2>Where do these statistics come from?</h2>
@@ -270,6 +190,97 @@
       </div>
       
     </footer>
+
+<script>
+  // Load the data from the JSON file and populate the page
+  fetch('public/data/data.json')
+    .then(response => response.json())
+    .then(data => {
+      console.log('Loaded data:', data);
+
+      populateSummary(data.summary);
+      renderCharts(data.charts);
+    })
+    .catch(error => console.error('Error loading data:', error));
+
+    // functiion to add summary_ prefix to relevants elements data.json and populate html with these values
+    // format-number class adds thousand separators
+  function populateSummary(summary) {
+    Object.keys(summary).forEach(key => {
+      document.querySelectorAll('.summary_' + key).forEach(el => {
+        const value = summary[key];
+
+        if (el.classList.contains('format-number') && typeof value === 'number') {
+          el.textContent = value.toLocaleString();
+        } else {
+          el.textContent = value;
+        }
+      });
+    });
+  }
+
+  // function to render charts, using objects in data.json. popAgeChart is defined in data.json and rendered in the canvas with id popAgeChart. 
+  // This allows us to easily add more charts in the future by just adding to data.json and the relevant canvas element in the HTML. 
+  function renderCharts(charts) {
+    Object.keys(charts).forEach(chartId => {
+      const chartDef = charts[chartId];
+      const canvas = document.getElementById(chartId);
+
+      if (!canvas) {
+        console.warn(`Canvas with id "${chartId}" not found`);
+        return;
+      }
+
+      new Chart(canvas.getContext('2d'), {
+        type: chartDef.type,
+        data: {
+          labels: chartDef.labels,
+          datasets: chartDef.datasets
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: true
+              },
+              ticks: {
+                maxTicksLimit: 5
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            title: {
+              display: !!chartDef.title,
+              text: chartDef.title,
+              font: {
+                family: 'Roboto',
+                size: 18,
+                weight: 'normal'
+              },
+              padding: {
+                top: 10,
+                bottom: 30
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  console.log(JSON.stringify(data, null, 2))
+</script>
+
 
   </body>
 </html>
