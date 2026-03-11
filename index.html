@@ -69,7 +69,6 @@
     
     <h2>How many people live in Northern Ireland?</h2>
     <p>In <span class="summary_latest_year"></span> around <span class="summary_latest_pop_round_million"></span> million people lived here (<span class="summary_latest_pop_total format-number"></span>).</p>
-    <!-- <img src="img/pop_age.png" alt="population by age group showing a population curve rising from children, to adults aged 16 to 39, peaking for 40 to 64 year olds and falling again for 65 and older"> -->
     
     <h2>What does our population look like?</h2>   
     <canvas id="popAgeChart"></canvas>
@@ -193,6 +192,7 @@
     </footer>
 
 <script>
+  // Load the data from the JSON file and populate the page
   fetch('public/data/data.json')
     .then(response => response.json())
     .then(data => {
@@ -203,6 +203,8 @@
     })
     .catch(error => console.error('Error loading data:', error));
 
+    // functiion to add summary_ prefix to relevants elements data.json and populate html with these values
+    // format-number class adds thousand separators
   function populateSummary(summary) {
     Object.keys(summary).forEach(key => {
       document.querySelectorAll('.summary_' + key).forEach(el => {
@@ -217,6 +219,8 @@
     });
   }
 
+  // function to render charts, using objects in data.json. popAgeChart is defined in data.json and rendered in the canvas with id popAgeChart. 
+  // This allows us to easily add more charts in the future by just adding to data.json and the relevant canvas element in the HTML. 
   function renderCharts(charts) {
     Object.keys(charts).forEach(chartId => {
       const chartDef = charts[chartId];
