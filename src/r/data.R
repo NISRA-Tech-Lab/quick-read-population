@@ -203,9 +203,10 @@ output_data <- list(
           backgroundColor = c("#00205b", "#00205b", "#00205b", "#00205b")
         )
       )
+      )
     )
   )
-)
+
  
 
 # If any of the values are single-length vectors, simplify them to the single value for easier use in the HTML.

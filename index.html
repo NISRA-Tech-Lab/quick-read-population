@@ -39,7 +39,7 @@
       <!-- Banner row (full width) -->
       <div class="w-100" style="background-color:#3878c5;">
         <div class="text-white text-center py-2 px-3">
-          <strong>We welcome feedback from users through our <a href="#" target="_blank">short survey</a></use></strong>
+          <strong>We welcome feedback from users through our <a href="https://dttselfserve.nidirect.gov.uk/NISRA/RateIt#/Population_Quick_Read" target="_blank">short survey</a></use></strong>
         </div>
       </div>
 
@@ -68,7 +68,8 @@
 
     
     <h2>How many people live in Northern Ireland?</h2>
-    <p>In <span class="summary_latest_year"></span> around <span class="summary_latest_pop_round_million"></span> million people lived here (<span class="summary_latest_pop_total format-number"></span>).</p>
+    <p>In <span class="summary_latest_year"></span> around <span class="summary_latest_pop_round_million" style="font-weight: bold;"></span> <span style="font-weight: bold;">million</span> people lived here:<br>
+      <span class="summary_latest_pop_total format-number bignumber"></span></p>
     
     <h2>What does our population look like?</h2>   
     <canvas id="popAgeChart"></canvas>
@@ -258,6 +259,9 @@
           plugins: {
             legend: {
               display: false
+            },
+            tooltip: {
+              enabled: false
             },
             title: {
               display: !!chartDef.title,
