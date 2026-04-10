@@ -40,6 +40,8 @@ h3 { font-size: 21px; line-height: 1.143; font-weight: 400; }
 h4 { font-size: 18px; line-height: 1.333; font-weight: 400; text-align: center; }
 @media (min-width: 992px) { h4 { font-size: 21px; line-height: 1.286; } }
 
+a {color: #0e6bb3}
+a:hover, a:focus {color: #B400F0; text-decoration-thickness: 2px;}
 
 /* Page background (main content area) */
 main { 

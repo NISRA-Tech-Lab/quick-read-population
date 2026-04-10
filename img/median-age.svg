@@ -1,0 +1,39 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 760 170"
+  role="img"
+  aria-labelledby="ageing-desc"
+  width="100%"
+  style="max-width:760px;height:auto;font-family:Arial,sans-serif"
+>
+  <desc id="ageing-desc">
+    A horizontal age scale from 0 to 80 showing that the median age increased
+    from 32 in 1994 to 40 in 2024.
+  </desc>
+
+  <!-- Scale -->
+  <line x1="110" y1="90" x2="650" y2="90" stroke="#00205b" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- End labels -->
+  <text x="110" y="120" text-anchor="middle" font-size="15" fill="#00205b">0</text>
+  <text x="650" y="120" text-anchor="middle" font-size="15" fill="#00205b">80</text>
+
+  <!-- 1994 marker: age 32 on a 0-80 scale -->
+  <line x1="326" y1="68" x2="326" y2="112" stroke="#3878c5" stroke-width="4"/>
+  <circle cx="326" cy="90" r="9" fill="#3878c5"/>
+  <text x="326" y="58" text-anchor="middle" font-size="18" font-weight="700" fill="#3878c5">32</text>
+  <text x="326" y="142" text-anchor="middle" font-size="16" font-weight="700" fill="#3878c5">1994</text>
+
+  <!-- 2024 marker: age 40 on a 0-80 scale -->
+  <line x1="380" y1="68" x2="380" y2="112" stroke="#732777" stroke-width="4"/>
+  <circle cx="380" cy="90" r="9" fill="#732777"/>
+  <text x="380" y="58" text-anchor="middle" font-size="18" font-weight="700" fill="#732777">40</text>
+  <text x="380" y="142" text-anchor="middle" font-size="16" font-weight="700" fill="#732777">2024</text>
+
+  <!-- Change annotation -->
+  <line x1="326" y1="24" x2="380" y2="24" stroke="#00205b" stroke-width="3"/>
+  <polygon points="380,24 372,19 372,29" fill="#00205b"/>
+  <text x="353" y="18" text-anchor="middle" font-size="15" font-weight="700" fill="#00205b">
+    +8 years
+  </text>
+</svg>

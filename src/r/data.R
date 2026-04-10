@@ -6,7 +6,8 @@ library(jsonlite)
 tables <- c(
   "MA01T01",
   "MYE01T04",
-  "PPMY02T02"
+  "PPMY02T02",
+  "MYE01T08"
 )
 
 # API Key ####
@@ -161,6 +162,9 @@ median_1994 <- MA01T01_df %>% filter(Year == 1994 & Sex == "All")%>% pull(VALUE)
 median_latest <- MA01T01_df %>% filter(Year == latest_year & Sex == "All") %>% pull(VALUE)
 median_latest_round <- round(median_latest, digits = 0)
 
+# historic mid-year projections
+df_mid_year_ests <- MYE01T08_df %>% subset(Age == "All" & Sex == "All") %>% select(Year, VALUE) %>% rename("year" = Year, "population" = VALUE)
+
 # projections
 df_projections <- PPMY02T02_df %>% subset(Sex == "All") 
 df_projections_yr_tots <- df_projections %>% group_by(Year) %>% summarise(total = sum(VALUE))
@@ -203,7 +207,19 @@ output_data <- list(
           backgroundColor = c("#00205b", "#00205b", "#00205b", "#00205b")
         )
       )
-      )
+      ),
+      projections_chart = list(
+        type = 'line',
+        title = "Population projections",
+        labels = df_projections_yr_tots$Year,
+        datasets = list(
+          list(
+            label = "Projected population",
+            data = df_projections_yr_tots$total,
+            borderColor = "#68a41e",
+            fill = FALSE
+          )
+        )
     )
   )
 
