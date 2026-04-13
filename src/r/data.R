@@ -166,13 +166,14 @@ median_latest_round <- round(median_latest, digits = 0)
 df_mid_year_ests <- MYE01T08_df %>% subset(Age == "All" & Sex == "All") %>% select(Year, VALUE) %>% rename("year" = Year, "population" = VALUE)
 
 # projections
-df_projections <- PPMY02T02_df %>% subset(Sex == "All") 
-df_projections_yr_tots <- df_projections %>% group_by(Year) %>% summarise(total = sum(VALUE))
+df_projections <- PPMY02T02_df %>% subset(Sex == "All") %>% rename(year = Year)
+df_projections_yr_tots <- df_projections %>% group_by(year) %>% summarise(total = sum(VALUE))
 pop_peak <- max(as.numeric(df_projections_yr_tots$total))
 pop_peak_mill <- round(pop_peak/1000000, digits = 2)
-pop_peak_year <- df_projections_yr_tots %>% filter(total == pop_peak) %>% pull(Year)
+pop_peak_year <- df_projections_yr_tots %>% filter(total == pop_peak) %>% pull(year)
 
-
+# create dataframe for chart with estimates and projections
+df_pop_projections_chart <- merge(df_mid_year_ests, df_projections_yr_tots, by= "year", all = TRUE) %>% rename(estimate = "population", projection = "total")
 
 if (!dir.exists("public")) dir.create("public")
 if (!dir.exists("public/data")) dir.create("public/data")
@@ -211,17 +212,26 @@ output_data <- list(
       projections_chart = list(
         type = 'line',
         title = "Population projections",
-        labels = df_projections_yr_tots$Year,
+        labels = df_pop_projections_chart$year,
         datasets = list(
           list(
-            label = "Projected population",
-            data = df_projections_yr_tots$total,
+            label = "Population estimate",
+            data = unname(df_pop_projections_chart$estimate),
+            borderColor = "#00205b",
+            fill = FALSE,
+            spanGaps = FALSE
+          ),
+          list(
+            label = "Population projection",
+            data = unname(df_pop_projections_chart$projection),
             borderColor = "#68a41e",
-            fill = FALSE
-          )
+            fill = FALSE,
+            spanGaps = TRUE
         )
-    )
+       )
+     )
   )
+)
 
  
 
