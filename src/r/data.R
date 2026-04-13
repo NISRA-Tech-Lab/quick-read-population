@@ -219,14 +219,18 @@ output_data <- list(
             data = unname(df_pop_projections_chart$estimate),
             borderColor = "#00205b",
             fill = FALSE,
-            spanGaps = FALSE
+            spanGaps = FALSE,
+            pointRadius = 0,
+            pointHoverRadius = 4
           ),
           list(
             label = "Population projection",
             data = unname(df_pop_projections_chart$projection),
             borderColor = "#68a41e",
             fill = FALSE,
-            spanGaps = TRUE
+            spanGaps = FALSE,
+            pointRadius = 0,
+            pointHoverRadius = 4
         )
        )
      )
@@ -241,6 +245,6 @@ output_data$summary <- lapply(output_data$summary, function(x) {
 })
 
 # Write as JSON
-jsonlite::write_json(output_data, "public/data/data.json", pretty = TRUE, auto_unbox = TRUE )
+jsonlite::write_json(output_data, "public/data/data.json", pretty = TRUE, auto_unbox = TRUE, na = "null")
 
 message("✓ Data fetched and cached successfully!")
