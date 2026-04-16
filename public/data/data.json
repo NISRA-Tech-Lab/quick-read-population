@@ -50,7 +50,8 @@
           "fill": false,
           "spanGaps": false,
           "pointRadius": 0,
-          "pointHoverRadius": 4
+          "pointHoverRadius": 4,
+          "borderDash": [6, 3]
         }
       ]
     }

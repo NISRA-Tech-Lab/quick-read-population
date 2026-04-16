@@ -230,7 +230,8 @@ output_data <- list(
             fill = FALSE,
             spanGaps = FALSE,
             pointRadius = 0,
-            pointHoverRadius = 4
+            pointHoverRadius = 4,
+            borderDash = c(6, 3)
         )
        )
      )
