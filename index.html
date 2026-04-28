@@ -217,7 +217,7 @@
       console.log('Loaded data:', data);
 
       populateSummary(data.summary);
-      renderCharts(data.charts);
+      renderCharts(data.charts, data.summary);
     })
     .catch(error => console.error('Error loading data:', error));
 
@@ -237,9 +237,52 @@
     });
   }
 
+const peakYearLinePlugin = {
+  id: 'peakYearLine',
+  afterDatasetsDraw(chart, args, pluginOptions) {
+    if (!pluginOptions?.year) return;
+
+    const { ctx, chartArea, scales } = chart;
+    const xScale = scales.x;
+
+    const yearIndex = chart.data.labels.findIndex(
+      label => Number(label) === Number(pluginOptions.year)
+    );
+
+    if (yearIndex === -1) return;
+
+    const x = xScale.getPixelForValue(yearIndex);
+
+   const labelY = chartArea.top + 24;
+
+ctx.save();
+
+const offsetX = 6;
+
+ctx.setLineDash([]);
+ctx.fillStyle = pluginOptions.color || '#666';
+ctx.font = '14px Roboto';
+ctx.textAlign = 'left';
+ctx.fillText(pluginOptions.label || pluginOptions.year, x + offsetX, labelY);
+
+ctx.beginPath();
+ctx.moveTo(x, chartArea.top);
+ctx.lineTo(x, chartArea.bottom);
+ctx.lineWidth = 2;
+ctx.strokeStyle = pluginOptions.color || '#666';
+ctx.setLineDash([6, 6]);
+ctx.stroke();
+
+ctx.restore();
+  }
+};
+
+Chart.register(peakYearLinePlugin);
+
+
   // function to render charts, using objects in data.json. Both charts are defined in data.json and rendered in the canvas with id popAgeChart. 
   // This allows us to easily add more charts in the future by just adding to data.json and the relevant canvas element in the HTML. 
-  function renderCharts(charts) {
+  function renderCharts(charts, summary) {
     Object.keys(charts).forEach(chartId => {
       const chartDef = charts[chartId];
       const canvas = document.getElementById(chartId);
@@ -283,7 +326,11 @@
           },
           plugins: {
             legend: {
-              display: isLine
+              display: isLine,
+              position: 'top',
+              labels: {
+                padding: 20
+              }
             },
             tooltip: {
               enabled: isLine
@@ -300,6 +347,11 @@
                 top: 10,
                 bottom: 30
               }
+            },
+            peakYearLine: {
+              year: summary.pop_peak_year,
+              color: '#666',
+              label: `Peak: ${summary.pop_peak_year}`
             }
           }
         }
