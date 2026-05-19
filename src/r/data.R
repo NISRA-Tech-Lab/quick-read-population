@@ -171,6 +171,8 @@ df_projections_yr_tots <- df_projections %>% group_by(year) %>% summarise(total 
 pop_peak <- max(as.numeric(df_projections_yr_tots$total))
 pop_peak_mill <- round(pop_peak/1000000, digits = 2)
 pop_peak_year <- df_projections_yr_tots %>% filter(total == pop_peak) %>% pull(year)
+current_year <- as.numeric(format(Sys.Date(), "%Y"))
+years_to_peak <- pop_peak_year - current_year
 
 # create dataframe for chart with estimates and projections
 df_pop_projections_chart <- merge(df_mid_year_ests, df_projections_yr_tots, by= "year", all = TRUE) %>% rename(estimate = "population", projection = "total")
@@ -195,7 +197,8 @@ output_data <- list(
     median_1994 = median_1994,
     median_latest = median_latest_round,
     pop_peak_mill = pop_peak_mill,
-    pop_peak_year = pop_peak_year),
+    pop_peak_year = pop_peak_year,
+    years_to_peak = years_to_peak),
   charts = list(
     popAgeChart = list(
       type = 'bar',
@@ -221,7 +224,8 @@ output_data <- list(
             fill = FALSE,
             spanGaps = FALSE,
             pointRadius = 0,
-            pointHoverRadius = 4
+            pointHoverRadius = 6,
+            pointHitRadius = 10
           ),
           list(
             label = "Population projection",
@@ -230,7 +234,8 @@ output_data <- list(
             fill = FALSE,
             spanGaps = FALSE,
             pointRadius = 0,
-            pointHoverRadius = 4,
+            pointHoverRadius = 6,
+            pointHitRadius = 10,
             borderDash = c(6, 3)
         )
        )
