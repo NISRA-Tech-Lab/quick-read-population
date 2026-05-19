@@ -71,10 +71,13 @@
     <p>In <span class="summary_latest_year"></span> around <span class="summary_latest_pop_round_million" style="font-weight: bold;"></span> <span style="font-weight: bold;">million</span> people lived here:<br>
       <span class="summary_latest_pop_total format-number bignumber"></span></p>
     
-      <img src="/img/people-bw.jpeg" alt="silhouettes of people" class="img-pop">
+      <img src="/img/people-bw.jpeg" alt="" class="img-pop">
     <h2>What does our population look like?</h2>
+    <p id="popchartDesc" class="visually-hidden" aria-hidden="true">Bar chart showing the population in four age groups.
+      16 and under is the smallest group. The next group is 16 to 39 which is larger. The next is age 40 to 64 which is the largest group.
+      Last is age 65 and over which is smaller than the under 16 group.</p>
     <div class="chart-container" style="height:400px;"> 
-    <canvas id="popAgeChart"></canvas>
+    <canvas id="popAgeChart" aria-describedby="popchartDesc" role="img"></canvas>
     </div>  
 
 
@@ -114,9 +117,13 @@
         <li>In <span class="summary_latest_year"></span> it was <span class="summary_median_latest"></span>.</li>
       </ul>
       <p>Our population is predicted to peak around <span class="summary_years_to_peak"></span> years from now.</p>
+      <p id="projChartDesc" class="visually-hidden" aria-hidden="true">Line chart showing population figures and projections for Northern Ireland from 1971 to 2070.
+         The chart shows a steady increase in population up to now, and growth projected to continue and then slowly decrease.</p>
       <div class="chart-container" style="height:400px;">
-      <canvas id="projections_chart"></canvas>
+      <canvas id="projections_chart" aria-describedby="projChartDesc"></canvas>
+      
       </div>
+      
 
       <p style="margin-top: 2em;">Our population growth is predicted to slow down, peak at <span class="summary_pop_peak_mill"></span> million in <span class="summary_pop_peak_year"></span> and then fall to 1.91 million by 2049.
          That is based on trends in how long we live, how many babies are born, and the numbers of people coming to live here and leaving to live elsewhere.</p>
