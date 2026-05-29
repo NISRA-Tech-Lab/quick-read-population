@@ -43,6 +43,19 @@ h4 { font-size: 18px; line-height: 1.333; font-weight: 400; text-align: center; 
 a {color: #0e6bb3}
 a:hover, a:focus {color: #B400F0; text-decoration-thickness: 2px;}
 
+/* style for RateIT link in header */
+.survey-link {
+  color: white;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.survey-link:hover,
+.survey-link:focus {
+  color: white;
+  text-decoration-thickness: 3px;
+}
+
 /* Page background (main content area) */
 main { 
   background: transparent !important;
@@ -162,4 +175,69 @@ nav a[target="_blank"]::after {
   height: 11px;
   margin: 0 5px 0 5px;
   vertical-align: text-top;
+}
+
+/* ===========================
+   Cookie banner
+   =========================== */ 
+   #cookie-banner {
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color:#142062;
+	color:#FFF;
+	padding: 10px;
+	text-align: left;
+    display: none;
+}
+
+.cookies-infobar {
+    color: #fff;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 10px;
+    text-align: left;
+}
+
+.cookies-infobar.cookies-infobar_accepted {
+    display: none;
+}
+
+.cookies-infobar_wrapper {
+    margin: 10px;
+}
+
+.cookies-infobar a {
+    color: inherit;
+}
+
+.cookies-infobar_btn {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #0f8243;
+  text-decoration: none;
+  color: #fff;
+  text-transform: none;
+  font-size: 1.2em;
+}
+
+a.cookies-infobar_btn, a.cookies-infobar_btn_reject {
+	color: #fff !important;
+}
+
+a.cookiesbarlink {
+    color: #2990FF;
+}
+
+.cookies-infobar_btn_reject {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #6d6e72;
+  text-decoration: none;
+  border-radius: 3px;
+  color: #fff;
+  text-transform: none;
+  font-size: 1.2em;
 }
