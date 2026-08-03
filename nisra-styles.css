@@ -40,8 +40,9 @@ h3 { font-size: 21px; line-height: 1.143; font-weight: 400; }
 h4 { font-size: 18px; line-height: 1.333; font-weight: 400; text-align: center; }
 @media (min-width: 992px) { h4 { font-size: 21px; line-height: 1.286; } }
 
-a {color: #0e6bb3}
-a:hover, a:focus {color: #B400F0; text-decoration-thickness: 2px;}
+/* Links style per style guide */
+a {color: #0F6FB8;  text-decoration: underline; text-decoration-thickness: 1px;}
+a:hover, a:focus {text-decoration-thickness: 3px;}
 
 /* style for RateIT link in header */
 .survey-link {
@@ -50,10 +51,16 @@ a:hover, a:focus {color: #B400F0; text-decoration-thickness: 2px;}
   text-decoration-thickness: 1px;
 }
 
-.survey-link:hover,
-.survey-link:focus {
-  color: white;
-  text-decoration-thickness: 3px;
+/* focus ring for keyboard users */
+*:focus-visible {
+  outline: 3px solid #d4351c !important;
+  outline-offset: 2.5px;
+  box-shadow: none !important;
+}
+
+:root {
+  --bs-focus-ring-color: #d4351c;     
+  --bs-focus-ring-width: 0.25rem;
 }
 
 /* Page background (main content area) */
@@ -146,7 +153,7 @@ clip-path: inset(50%) !important;
 .footer a:hover,
 .footer a:focus {
   color: #fff;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 3px;
 }
 .footer-links { list-style: none; padding-left: 0; }
 .footer-links .list-inline-item { margin: 0 .5rem; }
@@ -228,7 +235,7 @@ a.cookies-infobar_btn, a.cookies-infobar_btn_reject {
 }
 
 a.cookiesbarlink {
-    color: #2990FF;
+    color: #fff;
 }
 
 .cookies-infobar_btn_reject {
