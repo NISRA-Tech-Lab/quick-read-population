@@ -1,18 +1,18 @@
 {
   "summary": {
-    "latest_year": 2024,
+    "latest_year": 2025,
     "earliest_year": 2001,
     "latest_pop_round_million": 1.9,
-    "latest_pop_total": 1927855,
+    "latest_pop_total": 1928446,
     "pct_under_16": 20,
     "pct_16_64": 62,
     "pct_65_plus": 18,
     "pct_female": 51,
     "earliest_pop_total": 1688838,
     "earliest_pop_round_million": 1.7,
-    "pop_change_round": 239000,
+    "pop_change_round": 240000,
     "median_1994": 32,
-    "median_latest": 40,
+    "median_latest": 41,
     "pop_peak_mill": 1.94,
     "pop_peak_year": 2031,
     "years_to_peak": 5
@@ -20,12 +20,12 @@
   "charts": {
     "popAgeChart": {
       "type": "bar",
-      "title": "Population by age group 2024",
+      "title": "Population by age group 2025",
       "labels": ["Age 0-15", "Age 16-39", "Age 40-64", "Age 65+"],
       "datasets": [
         {
           "label": "Population",
-          "data": [384682, 571179, 622800, 349194],
+          "data": [378767, 569830, 623364, 356485],
           "backgroundColor": ["#00205b", "#00205b", "#00205b", "#00205b"]
         }
       ]
@@ -37,7 +37,7 @@
       "datasets": [
         {
           "label": "Population estimate",
-          "data": [1540413, 1538977, 1529993, 1526942, 1523518, 1523521, 1523310, 1523225, 1528253, 1532773, 1542964, 1544545, 1550560, 1557317, 1565352, 1573501, 1581954, 1585440, 1590435, 1595595, 1607295, 1623263, 1635552, 1643707, 1649131, 1661751, 1671261, 1677769, 1679006, 1682944, 1688838, 1697534, 1704924, 1714042, 1727733, 1743113, 1761683, 1779152, 1793333, 1804833, 1814318, 1824603, 1831677, 1843186, 1854943, 1866042, 1875178, 1886259, 1898519, 1900523, 1904564, 1910543, 1920382, 1927855, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+          "data": [1540413, 1538977, 1529993, 1526942, 1523518, 1523521, 1523310, 1523225, 1528253, 1532773, 1542964, 1544545, 1550560, 1557317, 1565352, 1573501, 1581954, 1585440, 1590435, 1595595, 1607295, 1623263, 1635552, 1643707, 1649131, 1661751, 1671261, 1677769, 1679006, 1682944, 1688838, 1697534, 1704924, 1714042, 1727733, 1743113, 1761683, 1779152, 1793333, 1804833, 1814318, 1824603, 1831677, 1843186, 1854943, 1866042, 1875178, 1886259, 1898519, 1900523, 1904564, 1910543, 1920382, 1927855, 1928446, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
           "borderColor": "#00205b",
           "fill": false,
           "spanGaps": false,
